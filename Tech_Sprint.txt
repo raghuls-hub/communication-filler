@@ -1,0 +1,68 @@
+Hey, Act as a project analyser and features creator for the below scenario :
+I am going to create a professional college communication among management, classes, teachers and represtatives of the class
+Technical stacks : 
+Frontend : React
+Database : Firestore
+Backend : Firebase
+Authentication : Firebase Auth 
+Deployment : Google Cloud
+
+My ideas of the products : 
+After login the landing page should be :
+like a flowchart in the heirarchy of 
+college -> department -> class -> All subjects
+All the icons are clickable to go inside for more options :
+In college : Write only by the college directors
+shows all events and important announcement for the whole college 
+In Department : Write by HODs and some teachers
+shows the department wise anouncements, Events, Time tables.
+In class : Write by tutors and representatives (Each class have three tutors) 
+Shows announcements by tutors, tasks and the students can reply for a chat when that chat is allowed to message by the tutors
+All subjects : Write by repective subject teachers and representatives 
+Shows announcements, tasks by teachers and reply by the students
+
+Unique features :
+A professional avatar for all users which can do :
+remaind all the tasks which are came from the all anouncemnts ,tasks to the user and orders them in time and authority priority.
+A mini assistant to the user
+
+small annoncements are cleared after a period of time so that we can save the space complexity
+
+We are going to connects the directors,tutors,students by each class's code which limits can be set when creation
+
+all chats are organized by a floating tab on the right top side which can navigate to the all annoucements, events , tasks in that chat coversation and this features works in the messages classification stratergy which mentioned below. 
+the messages created by anyone under these types :
+messages span : temp or permenant 
+messages important : low or mid or high
+messages reaching destinies : according to hierarchy of the flowchart the desdtiny can be setted like if is it a staff, can send to class students
+Message type : replyable or announcement or event
+
+all students have a facility to DM for their teachers 
+students send the leave or on duty or any other permission to their respectives tutors and they can be managed from the teachers side by the mini assistant
+
+have different colors to the respective message denoting the importance and span and type messages 
+
+Analyse this project deeply and advice some unique features which makes this site very usefull and advance managing the messages than the normal whatsapp group
+
+
+
+============================================================================================
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAUmLBAq2WcMV_6GIyFG5yBrm7-mf5IBGA",
+  authDomain: "college-communication-pl-196c7.firebaseapp.com",
+  projectId: "college-communication-pl-196c7",
+  storageBucket: "college-communication-pl-196c7.firebasestorage.app",
+  messagingSenderId: "44347564734",
+  appId: "1:44347564734:web:d9ed6c411f4ff97b3ef4ef"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+============================================================================================
