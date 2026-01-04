@@ -1,3 +1,9 @@
+Write-Host "Integrating 4 Message Types into Messaging Panel..." -ForegroundColor Cyan
+
+# --------------------------------------------------
+# Replace MessageComposer.jsx with Type-aware Composer
+# --------------------------------------------------
+@'
 import { useState } from "react";
 import { createMessage } from "../../services/messageService";
 import { useAuth } from "../../context/AuthContext";
@@ -16,24 +22,19 @@ export default function MessageComposer({ target }) {
   const handleSend = async () => {
     if (!title || !content || !target) return;
 
-    const conversationId =
-  target.type === "dm"
-    ? [profile.uid, target.id].sort().join("_")
-    : null;
+    const payload = {
+      scope: target.type === "dm" ? "dm" : "class",
+      scopeId: target.type === "dm" ? target.id : profile.classId,
 
-const payload = {
-  scope: target.type === "dm" ? "dm" : "class",
-  scopeId: target.type === "dm" ? target.id : profile.classId,
-  conversationId, // 🔑 ADD THIS
+      messageType: type,
+      title,
+      content,
 
-  messageType: type,
-  title,
-  content,
+      senderId: profile.uid,
+      senderRole: profile.role,
 
-  senderId: profile.uid,
-  senderRole: profile.role
-};
-
+      createdAt: new Date()
+    };
 
     if (type === "task" || type === "form") {
       payload.deadline = deadline ? new Date(deadline) : null;
@@ -123,3 +124,7 @@ const payload = {
     </div>
   );
 }
+'@ | Set-Content src/components/messages/MessageComposer.jsx
+
+Write-Host "MessageComposer updated with Task / Event / Material / Form support." -ForegroundColor Green
+Write-Host "Integration completed successfully."
