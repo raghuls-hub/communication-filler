@@ -1,12 +1,11 @@
 export default function MessageFeed({ messages }) {
   return (
-    <div>
-      <h3>Class Messages</h3>
+    <div className="space-y-3">
       {messages.map(msg => (
-        <div key={msg.id} style={{ border: "1px solid #ccc", margin: "8px", padding: "8px" }}>
-          <strong>{msg.title}</strong>
-          <p>{msg.content}</p>
-          <small>By {msg.senderRole}</small>
+        <div key={msg.id} className="bg-white p-4 rounded shadow">
+          <h4 className="font-semibold">{msg.title}</h4>
+          <p className="text-gray-700">{msg.content}</p>
+          <span className="text-xs text-gray-500">By {msg.senderRole}</span>
         </div>
       ))}
     </div>

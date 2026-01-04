@@ -1,23 +1,12 @@
-import { useEffect, useState } from "react";
-import { listenToClassMessages } from "../../services/messageService";
-import { useAuth } from "../../context/AuthContext";
-import MessageFeed from "../../components/messages/MessageFeed";
 import LogoutButton from "../../components/LogoutButton";
 
-export default function StudentDashboard() {
-  const { profile } = useAuth();
-  const [messages, setMessages] = useState([]);
-
-  useEffect(() => {
-    if (!profile?.classId) return;
-    return listenToClassMessages(profile.classId, setMessages);
-  }, [profile]);
-
+export default function Dashboard() {
   return (
-    <div>
-      <h2>Student Dashboard</h2>
-      <MessageFeed messages={messages} />
-      <LogoutButton/>
+    <div className="min-h-screen bg-gray-100 p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <LogoutButton />
+      </div>
     </div>
   );
 }

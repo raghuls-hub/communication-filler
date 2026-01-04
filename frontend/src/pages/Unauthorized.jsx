@@ -1,7 +1,7 @@
 export default function Unauthorized() {
   return (
-    <>
-      <h2 style={{ color: "white" }}>Access Denied</h2>
-    </>
+    <div className="min-h-screen flex items-center justify-center text-red-600 text-xl">
+      Access Denied
+    </div>
   );
 }

@@ -12,22 +12,17 @@ export default function Login() {
   const navigate = useNavigate();
   const { user, profile } = useAuth();
 
-  // Redirect after successful login & profile load
   useEffect(() => {
     if (user && profile) {
       if (profile.role !== selectedRole) {
-        setError("You are not authorized to login as this role.");
+        setError("Unauthorized role selection");
         return;
       }
-
-      if (profile.role === "admin") navigate("/admin");
-      if (profile.role === "teacher") navigate("/teacher");
-      if (profile.role === "student") navigate("/student");
+      navigate("/" + profile.role);
     }
   }, [user, profile, selectedRole, navigate]);
 
   const handleLogin = async () => {
-    setError("");
     try {
       await loginUser(email, password);
     } catch (e) {
@@ -36,50 +31,48 @@ export default function Login() {
   };
 
   return (
-    <div style={{ maxWidth: "400px", margin: "auto" }}>
-      <h2>Login</h2>
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-6 rounded shadow w-96">
+        <h2 className="text-xl font-semibold mb-4 text-center">Login</h2>
 
-      {/* Role Tabs */}
-      <div style={{ display: "flex", marginBottom: "16px" }}>
-        {["admin", "teacher", "student"].map(role => (
-          <button
-            key={role}
-            onClick={() => setSelectedRole(role)}
-            style={{
-              flex: 1,
-              padding: "8px",
-              backgroundColor: selectedRole === role ? "#1976d2" : "#e0e0e0",
-              color: selectedRole === role ? "#fff" : "#000",
-              border: "none",
-              cursor: "pointer"
-            }}
-          >
-            {role.toUpperCase()}
-          </button>
-        ))}
+        <div className="flex mb-4">
+          {["admin","teacher","student"].map(r => (
+            <button
+              key={r}
+              onClick={() => setSelectedRole(r)}
+              className={`flex-1 py-2 text-sm ${
+                selectedRole === r
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200"
+              }`}
+            >
+              {r.toUpperCase()}
+            </button>
+          ))}
+        </div>
+
+        <input
+          className="w-full border p-2 mb-2 rounded"
+          placeholder="Email"
+          onChange={e => setEmail(e.target.value)}
+        />
+
+        <input
+          className="w-full border p-2 mb-4 rounded"
+          type="password"
+          placeholder="Password"
+          onChange={e => setPassword(e.target.value)}
+        />
+
+        <button
+          onClick={handleLogin}
+          className="w-full bg-blue-600 text-white py-2 rounded"
+        >
+          Login
+        </button>
+
+        {error && <p className="text-red-600 text-sm mt-3">{error}</p>}
       </div>
-
-      {/* Login Form */}
-      <input
-        placeholder="Email"
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        style={{ width: "100%", marginBottom: "8px" }}
-      />
-
-      <input
-        placeholder="Password"
-        type="password"
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        style={{ width: "100%", marginBottom: "12px" }}
-      />
-
-      <button onClick={handleLogin} style={{ width: "100%" }}>
-        Login as {selectedRole}
-      </button>
-
-      {error && <p style={{ color: "red", marginTop: "10px" }}>{error}</p>}
     </div>
   );
 }
