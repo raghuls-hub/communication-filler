@@ -1,20 +1,54 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut
+} from "firebase/auth";
+import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "../firebase";
 
+/**
+ * ADMIN ONLY
+ * Creates Firebase Auth user + Firestore profile
+ */
 export const registerUser = async (email, password, userData) => {
-  const cred = await createUserWithEmailAndPassword(auth, email, password);
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
 
-  await setDoc(doc(db, "users", cred.user.uid), {
-    uid: cred.user.uid,
-    email,
-    ...userData,
-    createdAt: new Date()
-  });
+    await setDoc(doc(db, "users", cred.user.uid), {
+      uid: cred.user.uid,
+      email,
+      ...userData,
+      createdAt: serverTimestamp()
+    });
+
+    return cred.user;
+  } catch (error) {
+    console.error("Register user failed:", error);
+    throw error;
+  }
 };
 
+/**
+ * Login (All roles)
+ */
 export const loginUser = async (email, password) => {
-  return signInWithEmailAndPassword(auth, email, password);
+  try {
+    const result = await signInWithEmailAndPassword(auth, email, password);
+    return result.user;
+  } catch (error) {
+    console.error("Login failed:", error);
+    throw error;
+  }
 };
 
-export const logoutUser = async () => signOut(auth);
+/**
+ * Logout
+ */
+export const logoutUser = async () => {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.error("Logout failed:", error);
+    throw error;
+  }
+};

@@ -12,23 +12,53 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (u) => {
-      if (u) {
-        const snap = await getDoc(doc(db, "users", u.uid));
-        setUser(u);
-        setProfile(snap.data());
-      } else {
+      try {
+        if (u) {
+          const ref = doc(db, "users", u.uid);
+          const snap = await getDoc(ref);
+
+          if (!snap.exists()) {
+            console.error("Firestore user profile not found for UID:", u.uid);
+            setUser(u);
+            setProfile(null);
+          } else {
+            setUser(u);
+            setProfile(snap.data());
+          }
+        } else {
+          setUser(null);
+          setProfile(null);
+        }
+      } catch (err) {
+        console.error("AuthContext error:", err);
         setUser(null);
         setProfile(null);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return () => unsub();
   }, []);
 
+  // 🔴 VERY IMPORTANT: block app if profile missing
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (user && !profile) {
+    return (
+      <div style={{ padding: "20px", color: "red" }}>
+        User profile not found in Firestore.
+        <br />
+        Please contact administrator.
+      </div>
+    );
+  }
+
   return (
-    <AuthContext.Provider value={{ user, profile }}>
-      {!loading && children}
+    <AuthContext.Provider value={{ user, profile, loading }}>
+      {children}
     </AuthContext.Provider>
   );
 };
