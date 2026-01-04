@@ -5,7 +5,7 @@ const AddUserForm = ({ onClose }) => {
     email: '',
     password: '',
     displayName: '',
-    role: 'student', // default
+    role: 'student',
     department: '',
     classId: ''
   });
@@ -21,38 +21,43 @@ const AddUserForm = ({ onClose }) => {
     setLoading(true);
 
     try {
-      // ---------------------------------------------------------
-      // SAFE IMPLEMENTATION NOTE:
-      // ---------------------------------------------------------
-      // Frontend cannot create Auth users directly.
-      // This is a placeholder for the future Cloud Function call.
-      // e.g., httpsCallable(functions, 'createNewUser')(formData)
-      // ---------------------------------------------------------
-      
-      console.log(' [FUTURE CLOUD FUNCTION] Create User Payload:', formData);
-      alert('UI Only: This would trigger a Cloud Function to create the user safely.');
-      
+      // FUTURE: Cloud Function logic
+      console.log(' [FUTURE] Creating User:', formData);
+      await new Promise(resolve => setTimeout(resolve, 800)); // Simulate delay
       if (onClose) onClose();
     } catch (error) {
-      console.error('Error preparing user creation:', error);
+      console.error('Error:', error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-      <h3 className="text-xl font-bold mb-4">Add New User (UI Stub)</h3>
-      <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg border border-slate-200 transition-all duration-300">
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h3 className="text-xl font-bold text-slate-900">Add New User</h3>
+          <p className="text-sm text-slate-500">Create a new account in the system.</p>
+        </div>
+        <button 
+          onClick={onClose} 
+          className="text-slate-400 hover:text-slate-600 p-2 hover:bg-slate-100 rounded-full transition-colors"
+        >
+          âœ•
+        </button>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-5">
         
         {/* Email */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">Email</label>
+          <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email Address</label>
           <input
             type="email"
             name="email"
             required
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            className="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+            placeholder="user@university.edu"
             value={formData.email}
             onChange={handleChange}
           />
@@ -60,13 +65,13 @@ const AddUserForm = ({ onClose }) => {
 
         {/* Password */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">Temporary Password</label>
+          <label className="block text-sm font-semibold text-slate-700 mb-1.5">Temporary Password</label>
           <input
             type="password"
             name="password"
             required
             minLength={6}
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            className="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
             value={formData.password}
             onChange={handleChange}
           />
@@ -74,12 +79,12 @@ const AddUserForm = ({ onClose }) => {
 
         {/* Name */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">Full Name</label>
+          <label className="block text-sm font-semibold text-slate-700 mb-1.5">Full Name</label>
           <input
             type="text"
             name="displayName"
             required
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            className="w-full border border-slate-300 rounded-lg px-3 py-2.5 text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
             value={formData.displayName}
             onChange={handleChange}
           />
@@ -87,60 +92,78 @@ const AddUserForm = ({ onClose }) => {
 
         {/* Role Selection */}
         <div>
-          <label className="block text-sm font-medium text-gray-700">Role</label>
-          <select
-            name="role"
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            value={formData.role}
-            onChange={handleChange}
-          >
-            <option value="student">Student</option>
-            <option value="teacher">Teacher</option>
-            <option value="admin">Admin</option>
-          </select>
+          <label className="block text-sm font-semibold text-slate-700 mb-1.5">Role</label>
+          <div className="relative">
+            <select
+              name="role"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2.5 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 appearance-none transition-all"
+              value={formData.role}
+              onChange={handleChange}
+            >
+              <option value="student">Student</option>
+              <option value="teacher">Teacher</option>
+              <option value="admin">Admin</option>
+            </select>
+            <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+              <svg className="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+            </div>
+          </div>
         </div>
 
-        {/* Context Fields based on Role */}
+        {/* Context Fields */}
         {formData.role === 'student' && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Class ID</label>
-            <input
-              type="text"
-              name="classId"
-              placeholder="e.g., CS-2024-A"
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-              value={formData.classId}
-              onChange={handleChange}
-            />
+          <div className="bg-blue-50/50 p-4 rounded-lg border border-blue-100/50 space-y-3">
+            <div>
+              <label className="block text-xs font-bold text-blue-800 uppercase tracking-wide mb-1">Class ID</label>
+              <input
+                type="text"
+                name="classId"
+                placeholder="e.g., CS-2024-A"
+                className="w-full border border-blue-200 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
+                value={formData.classId}
+                onChange={handleChange}
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-blue-800 uppercase tracking-wide mb-1">Department</label>
+              <input
+                type="text"
+                name="department"
+                placeholder="e.g., Computer Science"
+                className="w-full border border-blue-200 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm"
+                value={formData.department}
+                onChange={handleChange}
+              />
+            </div>
           </div>
         )}
 
-        {(formData.role === 'teacher' || formData.role === 'student') && (
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Department</label>
+        {formData.role === 'teacher' && (
+           <div className="bg-indigo-50/50 p-4 rounded-lg border border-indigo-100/50">
+            <label className="block text-xs font-bold text-indigo-800 uppercase tracking-wide mb-1">Department</label>
             <input
               type="text"
               name="department"
-              placeholder="e.g., Computer Science"
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              placeholder="e.g., Mathematics"
+              className="w-full border border-indigo-200 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 text-sm"
               value={formData.department}
               onChange={handleChange}
             />
           </div>
         )}
 
-        <div className="flex gap-2 pt-4">
+        <div className="flex gap-3 pt-4">
           <button
             type="submit"
             disabled={loading}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 disabled:opacity-50"
+            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg shadow-sm hover:shadow transition-all disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            {loading ? 'Processing...' : 'Simulate Create'}
+            {loading ? 'Processing...' : 'Create User'}
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300"
+            className="px-6 py-2.5 border border-slate-300 text-slate-700 font-medium rounded-lg hover:bg-slate-50 transition-colors"
           >
             Cancel
           </button>
