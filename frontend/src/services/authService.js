@@ -1,19 +1,20 @@
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut
+﻿import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut 
 } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "../firebase";
 
 /**
- * ADMIN ONLY
+ * ADMIN ONLY (Caution: Logs out current user)
  * Creates Firebase Auth user + Firestore profile
  */
 export const registerUser = async (email, password, userData) => {
   try {
     const cred = await createUserWithEmailAndPassword(auth, email, password);
-
+    
+    // Create the user document in Firestore
     await setDoc(doc(db, "users", cred.user.uid), {
       uid: cred.user.uid,
       email,

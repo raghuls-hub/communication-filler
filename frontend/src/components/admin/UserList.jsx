@@ -2,7 +2,7 @@
 import { db } from '../../firebase';
 import { collection, getDocs, query, where, limit } from 'firebase/firestore';
 
-const UserList = ({ roleFilter }) => {
+const UserList = ({ roleFilter, onEditUser }) => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -41,13 +41,6 @@ const UserList = ({ roleFilter }) => {
   if (loading) return (
     <div className="p-12 text-center">
       <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-blue-500 border-t-transparent"></div>
-      <p className="mt-2 text-slate-500 font-medium">Loading {roleFilter}s...</p>
-    </div>
-  );
-
-  if (error) return (
-    <div className="p-4 mx-4 mt-4 bg-red-50 border border-red-100 text-red-600 rounded-lg text-sm font-medium">
-      {error}
     </div>
   );
 
@@ -68,9 +61,11 @@ const UserList = ({ roleFilter }) => {
               <tr key={user.id} className="hover:bg-slate-50/80 transition-colors duration-150">
                 <td className="py-4 px-6 whitespace-nowrap">
                   <div className="flex items-center">
-                    
+                    <div className="h-10 w-10 flex-shrink-0 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold shadow-sm">
+                      {(user.displayName || '?').charAt(0).toUpperCase()}
+                    </div>
                     <div className="ml-4">
-                      <div className="text-sm font-semibold text-slate-900">{user.name || 'Unnamed User'}</div>
+                      <div className="text-sm font-semibold text-slate-900">{user.displayName || 'Unnamed User'}</div>
                       <div className="text-sm text-slate-500">{user.email}</div>
                     </div>
                   </div>
@@ -82,34 +77,25 @@ const UserList = ({ roleFilter }) => {
                   </span>
                 </td>
                 <td className="py-4 px-6 text-sm text-slate-500">
-                  <div className="flex flex-col gap-1">
-                    {user.classId && (
-                      <span className="inline-flex items-center gap-1.5 text-xs text-slate-600">
-                        <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                        {user.classId}
-                      </span>
-                    )}
-                    {user.department && (
-                      <span className="inline-flex items-center gap-1.5 text-xs text-slate-600">
-                        <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                        {user.department}
-                      </span>
-                    )}
-                    {!user.classId && !user.department && <span className="text-slate-400 italic">No details</span>}
-                  </div>
+                   {user.classId || user.department ? (
+                     <div className="flex flex-col gap-1">
+                      {user.classId && <span className="text-xs">Class: {user.classId}</span>}
+                      {user.department && <span className="text-xs">Dept: {user.department}</span>}
+                     </div>
+                   ) : (
+                     <span className="text-slate-400 italic">No details</span>
+                   )}
                 </td>
                 <td className="py-4 px-6 text-right text-sm font-medium">
-                  <button className="text-blue-600 hover:text-blue-800 transition-colors">Edit</button>
+                  <button 
+                    onClick={() => onEditUser(user)}
+                    className="text-blue-600 hover:text-blue-800 transition-colors"
+                  >
+                    Edit
+                  </button>
                 </td>
               </tr>
             ))}
-            {users.length === 0 && (
-              <tr>
-                <td colSpan="4" className="py-12 text-center text-slate-400 text-sm">
-                  No {roleFilter}s found in the database.
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>
