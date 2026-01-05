@@ -154,3 +154,13 @@ export const getAllMessages = async () => {
   const snap = await getDocs(q);
   return snap.docs.map(d => ({ id: d.id, ...d.data() }));
 };
+
+/**
+ * Mark message as read by specific user
+ */
+export const markAsRead = async (messageId, userId) => {
+  const ref = doc(db, "messages", messageId);
+  await updateDoc(ref, {
+    readBy: arrayUnion(userId)
+  });
+};

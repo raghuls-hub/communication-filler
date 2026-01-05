@@ -1,3 +1,6 @@
+# Fix StudentDashboard.jsx to handle null currentUser safely
+$dashboardPath = "src/pages/student/StudentDashboard.jsx"
+$dashboardContent = @'
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../../context/AuthContext';
 // Named imports to match your service structure
@@ -174,3 +177,7 @@ const StudentDashboard = () => {
 };
 
 export default StudentDashboard;
+'@
+
+Set-Content -Path $dashboardPath -Value $dashboardContent
+Write-Host "✅ Fixed: Added null checks for currentUser in StudentDashboard.jsx" -ForegroundColor Green
