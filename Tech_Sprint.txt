@@ -52,15 +52,7 @@ import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyAUmLBAq2WcMV_6GIyFG5yBrm7-mf5IBGA",
-  authDomain: "college-communication-pl-196c7.firebaseapp.com",
-  projectId: "college-communication-pl-196c7",
-  storageBucket: "college-communication-pl-196c7.firebasestorage.app",
-  messagingSenderId: "44347564734",
-  appId: "1:44347564734:web:d9ed6c411f4ff97b3ef4ef"
-};
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
